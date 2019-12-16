@@ -1,34 +1,80 @@
-body { background-color: #F2F6D0 }
-#wrapper {
-  width: 960px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 5%;
-}
-#articles {
-  display: inline-block;
-  overflow: auto;
-  width: 60%;
-  height: 700px;
-}
-#notes {
-  float: right;
-  width: 30%;
-}
+@import url('https://fonts.googleapis.com/css?family=Boogaloo&display=swap');
+
 textarea, input {
   display: block;
   width: 100%;
-  background-color: #FCF5C7;
 }
 input {
   height: 36px;
   font-size: 24px;
 }
 textarea {
-  height: 200px;
+  height: 400px;
   font-size: 18px;
 }
-
 .article-title {
-    margin-bottom: 0px;
+    font-family: 'Boogaloo', cursive;
+    font-size: 135%;
+}
+.individual-article {
+  margin-bottom: 10px;
+}
+.card {
+  margin-bottom: 20px;
+  padding: 5px;
+}
+p {
+  margin-bottom: 10px;
+}
+/* unvisited link */
+a:link {
+  color: #33BFB8;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+/* visited link */
+a:visited {
+  color: rgb(27, 99, 95);
+  font-weight: normal;
+  text-decoration: none;
+}
+
+/* mouse over link */
+a:hover {
+  text-decoration: underline;
+}
+
+/* selected link */
+a:active {
+  color: rgb(117, 241, 235);
+  font-weight: normal;
+  text-decoration: none;
+}
+.titles {
+  margin-bottom:20px;
+}
+.tv-heading {
+  font-family: 'Boogaloo', cursive;
+}
+ h5 {
+   line-height: 150%;
+ }
+ .note-title {
+  font-family: 'Boogaloo', cursive;
+  font-size: 135%;
+ }
+ .form-control {
+   margin-bottom:10px;
+ }
+ .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+  background-color: #EE2C3E;
+}
+footer {
+  background-color: #E9ECEF;
+}
+.article-img {
+  /* float: left; */
+  width: 100px;
+  height: 100px;
 }

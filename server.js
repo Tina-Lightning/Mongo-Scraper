@@ -32,17 +32,34 @@ mongoose.connect("mongodb://localhost/MongoScraper", { useNewUrlParser: true });
 // The GET request scrapes the Vulture website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
-  axios.get("https://www.vulture.com/blog/").then(function(response) {
+  axios.get("https://www.vulture.com/tv/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
-      $(".main-article-content").each(function(i, element) {
+      $(".article-wrap").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(element).find(".headline").text();
-      result.link = "https:" + $(element).find("a").attr("href");
+      result.title = $(element)
+      .children(".main-article-content")
+      .find(".headline")
+      .text();
+
+      result.summary = $(element)
+      .children(".main-article-content")
+      .find(".teaser")
+      .text();
+
+      result.link =  "https:" + $(element)
+      .children(".main-article-content")
+      .find("a")
+      .attr("href");
+
+      result.image = $(element)
+      .children(".article-img-wrapper ")
+      .find("picture img")
+      .attr("data-src");
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)

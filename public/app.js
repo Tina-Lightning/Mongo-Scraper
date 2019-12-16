@@ -4,19 +4,42 @@ $.getJSON("/articles", function(data) {
         // Display the info on the page
 
         var newDiv = $("<div>");
-        newDiv.addClass("individual-article");
+        newDiv.addClass("card");
+
+        var newRow = $("<div>");
+        newRow.addClass("row");
+
+        var newColLeft = $("<div>");
+        newColLeft.addClass("col-2");
+
+        var newColRight = $("<div>");
+        newColRight.addClass("col-10");
+
+        var newImage = $("<img>");
+        newImage.addClass("article-img");
+        newImage.addClass("img-fluid");
+        newImage.attr("src", data[i].image);
+        newColLeft.append(newImage);
+
+        var newTitle = $("<p>");
+        newTitle.text(data[i].title);
+        newTitle.addClass("article-title");
+        newTitle.attr("data-id", data[i]._id);
+        newColRight.append(newTitle);
 
         var newPara = $("<p>");
-        newPara.text(data[i].title);
-        newPara.addClass("article-title");
-        newPara.attr("data-id", data[i]._id);
-        newDiv.append(newPara);
+        newPara.text(data[i].summary);
+        newColRight.append(newPara);
 
         var newLink = $("<a>");
         newLink.text("Link to the original article");
         newLink.attr("href", data[i].link);
         newLink.attr("target", "_blank");
-        newDiv.append(newLink);
+        newColRight.append(newLink);
+
+        newRow.append(newColLeft, newColRight)
+
+        newDiv.append(newRow);
 
         $("#articles").append(newDiv); 
     }
@@ -38,14 +61,35 @@ $(document).on("click", ".article-title", function() {
     .then(function(data) {
         console.log(data);
 
-        // The title of the article
-        $("#notes").append("<h2>" + data.title + "</h2>");
-        // An input field for a new title
-        $("#notes").append("<input id='titleinput' name='title' >");
-        // A text field for your note
-        $("#notes").append("<textarea id='bodyinput' name='body'></textarea>")
-        // A button to submit a new note, with the ID of the article saved to it
-        $("#notes").append("<button data-id='" + data._id + "'id='savenote'>Save Note</button>");
+        var newForm = $("<form>");
+        var newDiv = $("<div>");
+        newDiv.addClass("form-group");
+
+        var newHeader = $("<label>");
+        newHeader.text(data.title);
+        newHeader.addClass("note-title");
+
+        var newInput = $("<input>");
+        newInput.attr('id', 'titleinput');
+        newInput.attr('name', 'title');
+        newInput.addClass("form-control");
+
+        var newTextField = $("<textarea>");
+        newTextField.attr('id', 'bodyinput');
+        newTextField.attr('name', 'body');
+        newTextField.addClass("form-control");
+
+        var newButton = $("<button>");
+        newButton.attr("data-id", data._id);
+        newButton.attr("id", "savenote");
+        newButton.addClass("btn btn-primary");
+        newButton.text("Save Note");
+
+        newDiv.append(newHeader, newInput, newTextField, newButton);
+
+        newForm.append(newDiv);
+        
+        $("#notes").append(newForm);
 
         // If there's already a note...
         if (data.note) {
@@ -55,6 +99,7 @@ $(document).on("click", ".article-title", function() {
             $("#bodyinput").val(data.note.body);
         }
     });
+    
 });
 
 // Saving a note
