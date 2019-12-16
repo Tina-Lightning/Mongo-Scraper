@@ -14,6 +14,8 @@ var PORT = 3000;
 // Initialize Express
 var app = express();
 
+
+
 // Middleware
 
 // Morgan logs requests
@@ -25,7 +27,10 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // Connect to Mongo DB
-mongoose.connect("mongodb://localhost/MongoScraper", { useNewUrlParser: true });
+// mongoose.connect("mongodb://localhost/MongoScraper", { useNewUrlParser: true });
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/MongoScraper";
+
+mongoose.connect(MONGODB_URI);
 
 // Routes
 
