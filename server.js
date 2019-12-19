@@ -1,6 +1,7 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+var path = require("path");
 
 // Scraping tools
 var axios = require("axios");
@@ -9,7 +10,7 @@ var cheerio = require("cheerio");
 // Require the models
 var db = require("./models");
 
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3001;
 
 // Initialize Express
 var app = express();
@@ -36,6 +37,9 @@ mongoose.connect(
 );
 
 // Routes
+app.get("/", function(req, res) {
+  res.send(index.html);
+});
 
 // The GET request scrapes the Vulture website
 app.get("/scrape", function (req, res) {
@@ -82,7 +86,7 @@ app.get("/scrape", function (req, res) {
     });
 
     // Send a message to the client
-    res.send("Scrape Complete");
+    //res.send("Scrape Complete");
   });
 });
 
@@ -99,6 +103,20 @@ app.get("/articles", function (req, res) {
       res.json(err);
     });
 });
+
+// Route for getting a saved articles
+app.get("/saved", function(req, res) {
+  db.Article.find({"saved": true})
+      // and populate it with all of the notes associated with it
+      .then(function (dbArticle) {
+        // if you find the correct Article, send it back to the client
+        res.json(dbArticle);
+      })
+      .catch(function (err) {
+        // Log an error if it occurred 
+        res.json(err);
+      })
+  });
 
 // Route for getting a specific article by id & populate it with it's note
 app.get("/articles/:id", function (req, res) {
@@ -133,6 +151,36 @@ app.post("/articles/:id", function (req, res) {
       res.json(err);
     });
 });
+
+// Save an article
+app.post("/articles/save/:id", function(req, res) {
+  // Use the article id to find and update its saved boolean
+  db.Article.findOneAndUpdate({ "_id": req.params.id }, { "saved": true})
+  .then(function (dbArticle) {
+    // if you find the Articles, send them back to the client
+    res.json(dbArticle);
+  })
+  .catch(function (err) {
+    // Log an error if it occurred 
+    res.json(err);
+  });
+});
+
+// Delete an article
+app.put("/articles/delete/:id", function(req, res) {
+  // Use the article id to find and update its saved boolean
+  db.Article.findOneAndUpdate({ "_id": req.params.id }, { "saved": false})
+  // Execute the above query
+  .then(function (dbArticle) {
+    // if you find the Articles, send them back to the client
+    res.json(dbArticle);
+  })
+  .catch(function (err) {
+    // Log an error if it occurred 
+    res.json(err);
+  });
+});
+
 
 // Start the server
 app.listen(PORT, function () {
